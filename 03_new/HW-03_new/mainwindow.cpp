@@ -16,12 +16,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pb_Connect_clicked()
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    dialog->close();
     db.setHostName(ui->le_HostName->text());
     db.setDatabaseName(ui->le_DBName->text());
     db.setUserName(ui->le_Login->text());
     db.setPassword(ui->le_Password->text());
-    Dialog* dialog= new Dialog(this);
     dialog->show();
 }
 

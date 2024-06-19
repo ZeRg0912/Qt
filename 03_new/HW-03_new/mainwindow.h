@@ -24,6 +24,8 @@ private slots:
     void on_pb_Connect_clicked();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui;    
+    Dialog* dialog = new Dialog(this);
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
 };
 #endif // MAINWINDOW_H

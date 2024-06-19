@@ -15,6 +15,9 @@ public:
     explicit Dialog(QWidget *parent = nullptr);
     ~Dialog();
 
+private slots:
+    void on_pb_Close_clicked();
+
 private:
     Ui::Dialog *ui;
 };
