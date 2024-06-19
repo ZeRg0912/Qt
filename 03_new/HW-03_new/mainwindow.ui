@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>261</width>
-    <height>270</height>
+    <height>289</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -205,7 +205,8 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(225, 225, 225);</string>
+       <string notr="true">background-color: rgb(225, 225, 225);
+color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>Connect</string>
@@ -229,7 +230,7 @@
      <x>0</x>
      <y>0</y>
      <width>261</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
