@@ -231,6 +231,17 @@ color: rgb(0, 0, 0);</string>
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QPushButton" name="pb_Exit">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(225, 225, 225);
+color: rgb(0, 0, 0);</string>
+      </property>
+      <property name="text">
+       <string>Exit</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -254,5 +265,22 @@ color: rgb(0, 0, 0);</string>
   <tabstop>pb_Connect</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pb_Exit</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>130</x>
+     <y>245</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>130</x>
+     <y>144</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
