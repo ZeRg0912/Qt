@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>261</width>
-    <height>289</height>
+    <height>319</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -239,6 +239,9 @@ color: rgb(0, 0, 0);</string>
       </property>
       <property name="text">
        <string>Exit</string>
+      </property>
+      <property name="autoDefault">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
