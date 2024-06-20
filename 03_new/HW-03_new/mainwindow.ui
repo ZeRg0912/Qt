@@ -105,6 +105,9 @@
          <property name="styleSheet">
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
+         <property name="text">
+          <string>localhost</string>
+         </property>
         </widget>
        </item>
        <item row="1" column="0">
@@ -131,6 +134,9 @@
          <property name="styleSheet">
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
+         <property name="echoMode">
+          <enum>QLineEdit::Password</enum>
+         </property>
         </widget>
        </item>
        <item row="2" column="1">
@@ -147,6 +153,9 @@
          </property>
          <property name="maximum">
           <number>9999</number>
+         </property>
+         <property name="value">
+          <number>5432</number>
          </property>
         </widget>
        </item>
@@ -212,7 +221,7 @@ color: rgb(0, 0, 0);</string>
        <string>Connect</string>
       </property>
       <property name="autoDefault">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="default">
        <bool>false</bool>

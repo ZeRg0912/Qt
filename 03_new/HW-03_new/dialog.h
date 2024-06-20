@@ -14,6 +14,7 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = nullptr);
     ~Dialog();
+    void setData(const QString &text);
 
 private slots:
     void on_pb_Close_clicked();

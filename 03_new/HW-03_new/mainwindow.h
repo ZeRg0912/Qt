@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QDialog>
+#include <QString>
 #include <QSqlDatabase>
 
 #include "dialog.h"

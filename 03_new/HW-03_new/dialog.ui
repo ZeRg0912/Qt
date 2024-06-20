@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>188</width>
-    <height>125</height>
+    <width>195</width>
+    <height>183</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,22 +17,6 @@
    <string notr="true">background-color: rgb(188, 188, 188);</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLineEdit" name="le_Info">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(255, 255, 255);</string>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0">
     <widget class="QPushButton" name="pb_Close">
      <property name="styleSheet">
@@ -40,6 +24,13 @@
      </property>
      <property name="text">
       <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QTextEdit" name="te_Info">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
      </property>
     </widget>
    </item>
