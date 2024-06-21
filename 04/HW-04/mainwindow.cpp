@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rb_Mode1->setText("Frequency mode");
     ui->rb_Mode2->setText("Amplitude mode");
 
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 0; i <= 10; i++) {
         ui->cb_FrequencySelect->addItem(QString("%1").arg(i));
     }
 
@@ -25,7 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->te_OutputInfo->clear();
 
     ui->cb_FrequencySelect->setCurrentIndex(0);
-    ui->prb_Frequency->setValue(1);
+    uint32_t val = ui->cb_FrequencySelect->currentText().toInt();
+    ui->prb_Frequency->setValue(val);
+    InfoOut();
 }
 
 MainWindow::~MainWindow()

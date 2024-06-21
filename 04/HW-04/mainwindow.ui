@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>370</width>
-    <height>376</height>
+    <width>480</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,7 +37,7 @@ color: rgb(0, 0, 0);</string>
        <number>5</number>
       </property>
       <property name="maxCount">
-       <number>10</number>
+       <number>11</number>
       </property>
      </widget>
     </item>
@@ -143,7 +143,7 @@ color: rgb(0, 0, 0);</string>
          </property>
          <property name="maximumSize">
           <size>
-           <width>16777215</width>
+           <width>120</width>
            <height>16777215</height>
           </size>
          </property>
@@ -175,7 +175,7 @@ selection-color: rgb(0, 0, 0);</string>
          </property>
          <property name="maximumSize">
           <size>
-           <width>16777215</width>
+           <width>120</width>
            <height>16777215</height>
           </size>
          </property>
@@ -195,8 +195,8 @@ selection-color: rgb(0, 0, 0);</string>
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>200</width>
+           <height>200</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -215,6 +215,12 @@ selection-color: rgb(0, 0, 0);</string>
        </item>
        <item row="2" column="0" colspan="2">
         <widget class="QGroupBox" name="gb_ControlButtons">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true"/>
          </property>
@@ -295,7 +301,7 @@ selection-color: rgb(0, 0, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>370</width>
+     <width>480</width>
      <height>21</height>
     </rect>
    </property>
