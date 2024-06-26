@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(watch, &Stopwatch::sig_UpdateTime, this, &MainWindow::ReceiveTime);
     connect(this, &MainWindow::sig_Circle, watch, &Stopwatch::ReceiveCircle);
     connect(this, &MainWindow::sig_Clear, watch, &Stopwatch::ReceiveClear);
+    connect(this, &MainWindow::sig_Start, watch, &Stopwatch::StartTimer);
+    connect(this, &MainWindow::sig_Stop, watch, &Stopwatch::StopTimer);
 }
 
 MainWindow::~MainWindow()
@@ -38,13 +40,14 @@ void MainWindow::on_pb_StartStop_toggled(bool checked) {
         ui->pb_StartStop->setText("Пауза");
         ui->pb_StartStop->setStyleSheet("background-color: rgb(173, 0, 0);");
         ui->pb_NewCircle->setEnabled(true);
-        watch->StartTimer();
+        emit sig_Start();
 
     } else {
         ui->pb_StartStop->setText("Старт");
         ui->pb_StartStop->setStyleSheet("background-color:green;");
         ui->pb_NewCircle->setEnabled(false);
         watch->StopTimer();
+        emit sig_Stop();
     }
 }
 
