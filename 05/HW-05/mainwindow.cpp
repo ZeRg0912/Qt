@@ -48,7 +48,6 @@ void MainWindow::on_pb_StartStop_toggled(bool checked) {
         ui->pb_StartStop->setText("Старт");
         ui->pb_StartStop->setStyleSheet("background-color:green;");
         ui->pb_NewCircle->setEnabled(false);
-        watch->StopTimer();
         emit sig_Stop();
     }
 }
@@ -56,7 +55,7 @@ void MainWindow::on_pb_StartStop_toggled(bool checked) {
 
 void MainWindow::on_pb_NewCircle_clicked() {
     emit sig_Circle();
-    QString text = watch->circle_time;
+    QString text = watch->GetCircleTime();
     ui->tb_Circles->append(text);
 }
 

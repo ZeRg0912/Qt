@@ -6,6 +6,8 @@
 #include <QTime>
 #include <QDebug>
 
+static const int INTERVAL = 100;
+
 class Stopwatch : public QObject
 {
     Q_OBJECT
@@ -14,7 +16,10 @@ private:
     QTimer *timer;
     QTime time;
     QTime stop_time;
-    int circle_count = 1;
+    int circle_count = 1;    
+    QString current_time = "";
+    QString circle_time = "";
+    void UpdateTime();
 
 public slots:
     void ReceiveClear();
@@ -26,12 +31,10 @@ signals:
 public:
     Stopwatch(QObject *parent = nullptr);
     ~Stopwatch();
-    void UpdateTime();
     void StartTimer();
     void StopTimer();
-
-    QString current_time = "";
-    QString circle_time = "";
+    QString GetCurrentTime();
+    QString GetCircleTime();
 
 };
 

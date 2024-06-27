@@ -4,7 +4,7 @@ Stopwatch::Stopwatch(QObject *parent) : QObject{parent} {
     timer = new QTimer(this);
     time.setHMS(0, 0, 0, 0);
     stop_time.setHMS(0, 0, 0, 0);
-    timer->setInterval(100);
+    timer->setInterval(INTERVAL);
     connect(timer, &QTimer::timeout, this, &Stopwatch::UpdateTime);
 }
 
@@ -49,4 +49,12 @@ void Stopwatch::ReceiveClear() {
     circle_count = 1;
     time.setHMS(0, 0, 0, 0);
     stop_time.setHMS(0, 0, 0, 0);
+}
+
+QString Stopwatch::GetCurrentTime() {
+   return this->current_time;
+}
+
+QString Stopwatch::GetCircleTime() {
+    return this->circle_time;
 }
