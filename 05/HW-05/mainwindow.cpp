@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -7,15 +7,22 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     watch = new Stopwatch(this);
-    ui->pb_StartStop->setStyleSheet("background-color: rgb(173, 0, 0);");
-    ui->lb_Time->setText("Время, с");
-    ui->le_Time->setText(QString("0.00"));
-    ui->pb_Circle->setEnabled(false);
 
-    connect(watch, &Stopwatch::sig_UpdateTime, this, &MainWindow::UpdateTime);
-    connect(this, &MainWindow::sig_CircleTime, watch, &Stopwatch::ReceiveCircle);
-    connect(this, &MainWindow::sig_ClearTime, watch, &Stopwatch::ReceiveClear);
+    ui->lb_Time->setStyleSheet("color:white;");
+    ui->lb_Time->setText("Время: ");
+    ui->lb_OutTime->setStyleSheet("color:white;");
+    ui->lb_OutTime->setText("0:00.0");
+    ui->pb_Clear->setText("Сбросить");
+    ui->pb_NewCircle->setText("Круг");
+    ui->pb_StartStop->setText("Старт");
+    ui->pb_StartStop->setStyleSheet("background-color:green;");
+    ui->pb_NewCircle->setEnabled(false);
 
+    connect(watch, &Stopwatch::sig_UpdateTime, this, &MainWindow::ReceiveTime);
+    connect(this, &MainWindow::sig_Circle, watch, &Stopwatch::ReceiveCircle);
+    connect(this, &MainWindow::sig_Clear, watch, &Stopwatch::ReceiveClear);
+    connect(this, &MainWindow::sig_Start, watch, &Stopwatch::StartTimer);
+    connect(this, &MainWindow::sig_Stop, watch, &Stopwatch::StopTimer);
 }
 
 MainWindow::~MainWindow()
@@ -24,40 +31,39 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::UpdateTime(QString text)
+void MainWindow::ReceiveTime(QString &text)
 {
-    ui->le_Time->setText(text);
+    ui->lb_OutTime->setText(text);
 }
 
 
-void MainWindow::on_pb_StartStop_toggled(bool checked)
-{
+void MainWindow::on_pb_StartStop_toggled(bool checked) {
     if (checked) {
-        ui->pb_StartStop->setText("СТОП");
+        ui->pb_StartStop->setText("Пауза");
         ui->pb_StartStop->setStyleSheet("background-color: rgb(173, 0, 0);");
-        ui->pb_Circle->setEnabled(true);
-        watch->StartTimer();
-    }
-    else {
-        ui->pb_StartStop->setText("СТАРТ");
+        ui->pb_NewCircle->setEnabled(true);
+        emit sig_Start();
+
+    } else {
+        ui->pb_StartStop->setText("Старт");
         ui->pb_StartStop->setStyleSheet("background-color:green;");
-        ui->pb_Circle->setEnabled(false);
+        ui->pb_NewCircle->setEnabled(false);
         watch->StopTimer();
+        emit sig_Stop();
     }
 }
 
 
-void MainWindow::on_pb_Clear_clicked()
-{
-    ui->tb_CircleTime->clear();
-    ui->le_Time->setText("00:00.0");
-    emit sig_ClearTime();
+void MainWindow::on_pb_NewCircle_clicked() {
+    emit sig_Circle();
+    QString text = watch->circle_time;
+    ui->tb_Circles->append(text);
 }
 
 
-void MainWindow::on_pb_Circle_clicked()
-{
-    emit sig_CircleTime();
-    QString text = watch->strCircleTime;
-    ui->tb_CircleTime->append(text);
+void MainWindow::on_pb_Clear_clicked() {
+    ui->tb_Circles->clear();
+    ui->lb_OutTime->setText("00:00.0");
+    emit sig_Clear();
 }
+

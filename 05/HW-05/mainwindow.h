@@ -2,8 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QDebug>
-#include "Stopwatch.h"
+#include "stopwatch.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,15 +19,17 @@ public:
 private slots:
     void on_pb_StartStop_toggled(bool checked);
 
+    void on_pb_NewCircle_clicked();
+
     void on_pb_Clear_clicked();
 
-    void on_pb_Circle_clicked();
-
-    void UpdateTime(QString text);
+    void ReceiveTime(QString& text);
 
 signals:
-    void sig_CircleTime();
-    void sig_ClearTime();
+    void sig_Circle();
+    void sig_Clear();
+    void sig_Start();
+    void sig_Stop();
 
 private:
     Ui::MainWindow *ui;

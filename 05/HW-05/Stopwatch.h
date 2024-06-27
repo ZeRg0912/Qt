@@ -11,28 +11,28 @@ class Stopwatch : public QObject
     Q_OBJECT
 
 private:
-     QTimer *timer;
-     QTime time;
-     QTime stopTime;
-     int circleTime;
-     int count;
+    QTimer *timer;
+    QTime time;
+    QTime stop_time;
+    int circle_count = 1;
+
+public slots:
+    void ReceiveClear();
+    void ReceiveCircle();
+
+signals:
+    void sig_UpdateTime(QString& time);
 
 public:
-    explicit Stopwatch(QObject *parent = nullptr);
+    Stopwatch(QObject *parent = nullptr);
     ~Stopwatch();
     void UpdateTime();
     void StartTimer();
     void StopTimer();
 
-    QString strCurrentTime;
-    QString strCircleTime;
+    QString current_time = "";
+    QString circle_time = "";
 
-signals:
-    void sig_UpdateTime(QString& time);
-
-public slots:
-    void ReceiveCircle();
-    void ReceiveClear();
 };
 
 #endif // STOPWATCH_H

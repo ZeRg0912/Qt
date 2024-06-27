@@ -1,52 +1,52 @@
 #include "stopwatch.h"
 
-Stopwatch::Stopwatch(QObject *parent) : QObject{parent}
-{
-    time.setHMS(0, 0, 0, 0);
-    stopTime.setHMS(0, 0, 0, 0);
-    circleTime = 0;
-    count = 1;
-
+Stopwatch::Stopwatch(QObject *parent) : QObject{parent} {
     timer = new QTimer(this);
+    time.setHMS(0, 0, 0, 0);
+    stop_time.setHMS(0, 0, 0, 0);
     timer->setInterval(100);
     connect(timer, &QTimer::timeout, this, &Stopwatch::UpdateTime);
 }
 
-Stopwatch::~Stopwatch()
-{
+Stopwatch::~Stopwatch() {
     delete timer;
 }
 
-void Stopwatch::UpdateTime()
-{
+void Stopwatch::UpdateTime() {
     time = time.addMSecs(100);
-    strCurrentTime = time.toString("mm:ss.z");
-    emit sig_UpdateTime(strCurrentTime);
+    current_time = time.toString("mm:ss.z");
+    emit sig_UpdateTime(current_time);
 }
 
-void Stopwatch::StartTimer()
-{
+void Stopwatch::StartTimer() {
     timer->start();
     UpdateTime();
 }
 
-void Stopwatch::StopTimer()
-{
+void Stopwatch::StopTimer() {
     timer->stop();
 }
 
-void Stopwatch::ReceiveCircle()
-{
-    circleTime = stopTime.secsTo(time);
-    strCircleTime = "Круг " + QString::number(count) + " , время: " + QString::number(circleTime) + " сек";
-    stopTime = time;
-    count++;
+void Stopwatch::ReceiveCircle() {
+    int minutes = 0;
+    if (stop_time.secsTo(time) / 60) {
+        minutes = stop_time.secsTo(time) / 60;
+    }
+    stop_time = stop_time.addSecs(60 * minutes);
+
+    circle_time =   "Круг №"
+                    + QString::number(circle_count++)
+                    + " - "
+                    + QString::number(minutes)
+                    + ":"
+                    + QString::number(stop_time.secsTo(time))
+                    + "."
+                    + QString::number(stop_time.msecsTo(time));
+    stop_time = time;
 }
 
-void Stopwatch::ReceiveClear()
-{
-    count = 1;
+void Stopwatch::ReceiveClear() {
+    circle_count = 1;
     time.setHMS(0, 0, 0, 0);
-    stopTime.setHMS(0, 0, 0, 0);
+    stop_time.setHMS(0, 0, 0, 0);
 }
-
