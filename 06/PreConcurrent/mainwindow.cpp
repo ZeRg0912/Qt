@@ -79,11 +79,10 @@ MainWindow::~MainWindow()
 void MainWindow::StartRace(void){
 
 
-    if(ui->rb_qtConcur->isChecked()){
-
-        ui->te_debug->append("Выполни ДЗ!");
-        //Тут должен быть код ДЗ
-
+    if(ui->rb_qtConcur->isChecked()){        
+        auto concur1 = [this](){concurRace1->DoWork(&number, ui->rb_qtConcur->isChecked(), ui->sb_initNum->value());};
+        auto concur2 = [this](){concurRace2->DoWork(&number, ui->rb_qtConcur->isChecked(), ui->sb_initNum->value());};
+        QtConcurrent::run(concur1).then(concur2);
     }
     else{
         race1->operate(&number, ui->rb_mutexOn->isChecked(), ui->sb_initNum->value());
