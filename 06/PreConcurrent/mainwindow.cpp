@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 
 
 
@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
    concurRace2 = new ExampleRace(&m);
 
     //Сигналы по завершению работы потоков
-    connect(race1, &Controller::sig_WorkFinish, [&](){
+    connect(race1, &Controller::sig_WorkFinish, this, [&](){
         //отображаем только когда второй поток закончит работу
         if(countFinish == 0){
             countFinish++;
@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     });
 
-    connect(race2, &Controller::sig_WorkFinish, [&](){
+    connect(race2, &Controller::sig_WorkFinish, this, [&](){
 
         if(countFinish == 0){
             countFinish++;
@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
 
-    connect(concurRace1, &ExampleRace::sig_Finish, [&](){
+    connect(concurRace1, &ExampleRace::sig_Finish, this, [&](){
 
         if(countFinish == 0){
             countFinish++;
@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
 
-    connect(concurRace2, &ExampleRace::sig_Finish, [&](){
+    connect(concurRace2, &ExampleRace::sig_Finish, this, [&](){
 
         if(countFinish == 0){
             countFinish++;
@@ -85,8 +85,8 @@ void MainWindow::StartRace(void){
         QtConcurrent::run(concur1).then(concur2);
     }
     else{
-        race1->operate(&number, ui->rb_mutexOn->isChecked(), ui->sb_initNum->value());
-        race2->operate(&number, ui->rb_mutexOn->isChecked(), ui->sb_initNum->value());
+        emit race1->operate(&number, ui->rb_mutexOn->isChecked(), ui->sb_initNum->value());
+        emit race2->operate(&number, ui->rb_mutexOn->isChecked(), ui->sb_initNum->value());
     }
 }
 
