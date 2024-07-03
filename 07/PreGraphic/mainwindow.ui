@@ -70,9 +70,6 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0" colspan="2">
-        <widget class="QSpinBox" name="spinBox"/>
-       </item>
       </layout>
      </widget>
     </item>
@@ -148,7 +145,7 @@
      <x>0</x>
      <y>0</y>
      <width>402</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

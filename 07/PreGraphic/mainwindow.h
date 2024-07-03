@@ -7,14 +7,14 @@
 #include <QMessageBox>
 #include <QtGlobal>
 #include <QtConcurrent>
-#include <algorithm>
+//#include <algorithm>
 
 ///Подключаем все что нужно для графиков
 #include <QLineSeries>
 #include <QtCharts>
 #include <QChartView>
 
-#define FD 1000.0 //частота дискретизации
+#define FD 500.0 //частота дискретизации
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -38,13 +38,13 @@ public:
     //Метод отображает результаты
     void DisplayResult(QVector<double> mins, QVector<double> maxs);
 
-
-
 private slots:
     void on_pb_path_clicked();
     void on_pb_start_clicked();
+    void slot_dataDisplay();
 
-
+signals:
+    void sgnl_dataDisplay();
 
 private:
     Ui::MainWindow *ui;
@@ -54,6 +54,11 @@ private:
     QVector<uint32_t> readData;
     QVector<double> procesData;
     QVector<double> mins, maxs;
+
+    QLineSeries *series;
+    QChart *chart;
+    QChartView *chartView;
+    QGridLayout *layout;
 
 };
 #endif // MAINWINDOW_H

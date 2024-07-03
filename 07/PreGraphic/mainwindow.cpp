@@ -8,15 +8,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->pb_clearResult->setCheckable(true);
 
-
+    series = new QLineSeries;
+    chart = new QChart;
+    chart->legend()->hide();
+    chartView = new QChartView;
+    connect(this, &MainWindow::sgnl_dataDisplay, this, &MainWindow::slot_dataDisplay);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete series;
+    delete chart;
+    delete chartView;
 }
-
-
 
 /****************************************************/
 /*!
@@ -27,7 +32,6 @@ MainWindow::~MainWindow()
 /****************************************************/
 QVector<uint32_t> MainWindow::ReadFile(QString path, uint8_t numberChannel)
 {
-
     QFile file(path);
     file.open(QIODevice::ReadOnly);
 
@@ -36,12 +40,11 @@ QVector<uint32_t> MainWindow::ReadFile(QString path, uint8_t numberChannel)
         if(pathToFile.isEmpty()){
             QMessageBox mb;
             mb.setWindowTitle("Ошибка");
-            mb.setText("Ошибка открытия фала");
+            mb.setText("Ошибка открытия файла");
             mb.exec();
         }
     }
     else{
-
         //продумать как выйти из функции
     }
 
@@ -101,7 +104,6 @@ QVector<double> MainWindow::ProcessFile(const QVector<uint32_t> dataFile)
         resultData.append(res);
     }
     ui->chB_procFileSucces->setChecked(true);
-
     return resultData;
 }
 
@@ -177,7 +179,9 @@ void MainWindow::on_pb_path_clicked()
     ui->le_path->clear();
 
     pathToFile =  QFileDialog::getOpenFileName(this,
-                                              tr("Открыть файл"), "/home/", tr("ADC Files (*.adc)"));
+                                              tr("Открыть файл"),
+                                              "/home/",
+                                              tr("ADC Files (*.adc)"));
 
     ui->le_path->setText(pathToFile);
 }
@@ -191,7 +195,6 @@ void MainWindow::on_pb_start_clicked()
 {
     //проверка на то, что файл выбран
     if(pathToFile.isEmpty()){
-
         QMessageBox mb;
         mb.setWindowTitle("Ошибка");
         mb.setText("Выберите файл!");
@@ -209,34 +212,47 @@ void MainWindow::on_pb_start_clicked()
     if(selectIndex == 0){
         numberSelectChannel = 0xEA;
     }
-    else if(selectIndex == 1){
+    else if(selectIndex == 1)
+    {
         numberSelectChannel = 0xEF;
     }
-    else if(selectIndex == 2){
+    else if(selectIndex == 2)
+    {
         numberSelectChannel = 0xED;
     }
 
+    if (!(chart->series().isEmpty())) {
+        series->clear();
+        chart->removeSeries(series);
+    }
 
     auto read = [&]{ return ReadFile(pathToFile, numberSelectChannel); };
     auto process = [&](QVector<uint32_t> res){ return ProcessFile(res);};
     auto findMax = [&](QVector<double> res){
-                                                maxs = FindMax(res);
-                                                mins = FindMin(res);
-                                                DisplayResult(mins, maxs);
+           maxs = FindMax(res);
+           mins = FindMin(res);
+           DisplayResult(mins, maxs);
 
-                                                /*
-                                                 * Тут необходимо реализовать код наполнения серии
-                                                 * и вызов сигнала для отображения графика
-                                                 */
-
-                                             };
+           for(int i = 0; i<1000; ++i){
+               series->append(i, res[i]);
+           }
+           emit sgnl_dataDisplay();
+    };
 
     auto result = QtConcurrent::run(read)
                                .then(process)
                                .then(findMax);
-
-
-
 }
 
+void MainWindow::slot_dataDisplay()
+{
+    chart->setTitle("Data Display");
+    chart->addSeries(series);
+    chart->createDefaultAxes();
+
+    chartView->setChart(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    chartView->show();
+}
 
