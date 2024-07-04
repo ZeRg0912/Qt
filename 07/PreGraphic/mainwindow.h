@@ -14,7 +14,7 @@
 #include <QtCharts>
 #include <QChartView>
 
-#define FD 500.0 //частота дискретизации
+#define FD 1000.0 //частота дискретизации
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

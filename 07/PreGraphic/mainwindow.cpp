@@ -233,7 +233,7 @@ void MainWindow::on_pb_start_clicked()
            mins = FindMin(res);
            DisplayResult(mins, maxs);
 
-           for(int i = 0; i<1000; ++i){
+           for(int i = 0; i < FD; ++i){
                series->append(i, res[i]);
            }
            emit sgnl_dataDisplay();
@@ -251,8 +251,6 @@ void MainWindow::slot_dataDisplay()
     chart->createDefaultAxes();
 
     chartView->setChart(chart);
-    chartView->setRenderHint(QPainter::Antialiasing);
-
     chartView->show();
 }
 
