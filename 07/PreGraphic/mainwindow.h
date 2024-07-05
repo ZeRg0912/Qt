@@ -60,5 +60,7 @@ private:
     QChartView *chartView;
     QGridLayout *layout;
 
+    std::unordered_map<QString, std::pair<QVector<uint32_t>, std::time_t>> data_cache;
+
 };
 #endif // MAINWINDOW_H

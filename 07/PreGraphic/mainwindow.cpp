@@ -44,8 +44,12 @@ QVector<uint32_t> MainWindow::ReadFile(QString path, uint8_t numberChannel)
             mb.exec();
         }
     }
-    else{
-        //продумать как выйти из функции
+    else{        
+        auto it = data_cache.find(path);
+        if (it != data_cache.end()) {
+            ui->chB_readSucces->setChecked(true);
+            return it->second.first;
+        }
     }
 
     QDataStream dataStream;
@@ -85,6 +89,7 @@ QVector<uint32_t> MainWindow::ReadFile(QString path, uint8_t numberChannel)
             }
         }
     }
+    data_cache[path] = std::make_pair(readData, std::time(nullptr));
     ui->chB_readSucces->setChecked(true);
     return readData;
 }
