@@ -4,7 +4,6 @@ DataBase::DataBase(QObject *parent)
     : QObject{parent}
 {
     dataBase = new QSqlDatabase();
-    simpleQuery = new QSqlQuery();
 }
 
 DataBase::~DataBase()
@@ -20,6 +19,8 @@ DataBase::~DataBase()
 void DataBase::AddDataBase(QString driver, QString nameDB)
 {
     *dataBase = QSqlDatabase::addDatabase(driver, nameDB);
+    tableModel = new QSqlTableModel(this, *dataBase);
+    queryModel = new QSqlQueryModel(this);
 }
 
 /*!
@@ -38,11 +39,7 @@ void DataBase::ConnectToDataBase(QVector<QString> data)
     ///Тут должен быть код ДЗ
 
     bool status;
-    status = dataBase->open( );
-    if (status) {
-        tableModel = new QSqlTableModel(this, *dataBase);
-        queryModel = new QSqlQueryModel(this);
-    }
+    status = dataBase->open();
     emit sig_SendStatusConnection(status);
 }
 
@@ -63,7 +60,6 @@ void DataBase::DisconnectFromDataBase(QString nameDb)
 void DataBase::RequestToDB(const requestType& type, QTableView* tv_result)
 {
     QSqlError err;
-    *simpleQuery = QSqlQuery(*dataBase);
 
     QString request = "SELECT title, description FROM film f "
                       "JOIN film_category fc on f.film_id = fc.film_id "
@@ -102,10 +98,6 @@ void DataBase::RequestToDB(const requestType& type, QTableView* tv_result)
                 tv_result->setColumnHidden(col, true);
             }
         }
-    }
-    if(simpleQuery->exec(request) == false){
-        err = simpleQuery->lastError();
-        emit sig_SendStatusRequest(err);
     }
     tv_result->resizeColumnsToContents();
 }
