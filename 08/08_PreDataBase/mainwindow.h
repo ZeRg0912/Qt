@@ -24,14 +24,12 @@ public slots:
     void ReceiveStatusConnectionToDB(bool status);
     void ReceiveStatusRequestToDB(QSqlError err);
 
-
 private slots:
     void on_act_addData_triggered();
     void on_pb_request_clicked();
-    void ConnectToDB(QVector<QString> receiveData);
+    void on_pb_clear_clicked();
 
 signals:
-
 
 private:
 

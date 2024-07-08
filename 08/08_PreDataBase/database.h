@@ -8,7 +8,6 @@
 #include <QSqlTableModel>
 #include <QSqlQueryModel>
 #include <QtSql>
-#include <QDebug>
 
 
 #define POSTGRE_DRIVER "QPSQL"

@@ -118,7 +118,7 @@
      </widget>
     </item>
     <item row="1" column="0" rowspan="4">
-     <widget class="QTableView" name="tb_result">
+     <widget class="QTableView" name="tv_result">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -135,7 +135,7 @@
      <x>0</x>
      <y>0</y>
      <width>483</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -148,14 +148,14 @@
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="act_connect">
-   <property name="text">
-    <string>Подключиться</string>
-   </property>
-  </action>
   <action name="act_addData">
    <property name="text">
     <string>Ввести данные</string>
+   </property>
+  </action>
+  <action name="act_connect">
+   <property name="text">
+    <string>Подключиться</string>
    </property>
   </action>
  </widget>

@@ -19,9 +19,7 @@ DataBase::~DataBase()
  */
 void DataBase::AddDataBase(QString driver, QString nameDB)
 {
-
     *dataBase = QSqlDatabase::addDatabase(driver, nameDB);
-
 }
 
 /*!
@@ -31,16 +29,13 @@ void DataBase::AddDataBase(QString driver, QString nameDB)
  */
 void DataBase::ConnectToDataBase(QVector<QString> data)
 {
-
     dataBase->setHostName(data[hostName]);
     dataBase->setDatabaseName(data[dbName]);
     dataBase->setUserName(data[login]);
     dataBase->setPassword(data[pass]);
     dataBase->setPort(data[port].toInt());
 
-
     ///Тут должен быть код ДЗ
-
 
     bool status;
     status = dataBase->open( );
@@ -49,7 +44,6 @@ void DataBase::ConnectToDataBase(QVector<QString> data)
         queryModel = new QSqlQueryModel(this);
     }
     emit sig_SendStatusConnection(status);
-
 }
 
 /*!
@@ -58,17 +52,15 @@ void DataBase::ConnectToDataBase(QVector<QString> data)
  */
 void DataBase::DisconnectFromDataBase(QString nameDb)
 {
-
     *dataBase = QSqlDatabase::database(nameDb);
     dataBase->close();
-
 }
 
 /*!
  * \brief Метод формирует запрос к БД.
  * \param request - SQL запрос
  */
-void DataBase::RequestToDB(const requestType& type, QTableView* tb_result)
+void DataBase::RequestToDB(const requestType& type, QTableView* tv_result)
 {
     QSqlError err;
     *simpleQuery = QSqlQuery(*dataBase);
@@ -84,14 +76,13 @@ void DataBase::RequestToDB(const requestType& type, QTableView* tb_result)
         tableModel->setHeaderData(1, Qt::Horizontal, tr("Название"));
         tableModel->setHeaderData(2, Qt::Horizontal, tr("Описание"));
         tableModel->select();
-        tb_result->setModel(tableModel);
+        tv_result->setModel(tableModel);
 
         for (int column = 0; column < tableModel->columnCount(); column++) {
             if (column != 1 && column != 2) {
-                tb_result->setColumnHidden(column, true);
+                tv_result->setColumnHidden(column, true);
             }
         }
-
 
     } else {
 
@@ -102,16 +93,13 @@ void DataBase::RequestToDB(const requestType& type, QTableView* tb_result)
         }
 
         queryModel->setQuery(request, *dataBase);
-
-        qDebug() << queryModel->lastError();
-        qDebug() << queryModel->query().lastQuery();
-
         queryModel->setHeaderData(0, Qt::Horizontal, tr("Название"));
         queryModel->setHeaderData(1, Qt::Horizontal, tr("Описание"));
-        tb_result->setModel(queryModel);
+        tv_result->setModel(queryModel);
+
         for (int col = 0; col < queryModel->columnCount(); ++col) {
-            if (col != 0 && col != 1) { // Скрыть все столбцы, кроме второго и третьего
-                tb_result->setColumnHidden(col, true);
+            if (col != 0 && col != 1) {
+                tv_result->setColumnHidden(col, true);
             }
         }
     }
@@ -119,7 +107,7 @@ void DataBase::RequestToDB(const requestType& type, QTableView* tb_result)
         err = simpleQuery->lastError();
         emit sig_SendStatusRequest(err);
     }
-    tb_result->resizeColumnsToContents();
+    tv_result->resizeColumnsToContents();
 }
 
 /*!

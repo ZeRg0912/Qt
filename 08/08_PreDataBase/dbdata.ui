@@ -97,7 +97,7 @@
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="text">
-         <string>localhost</string>
+         <string>981757-ca08998.tmweb.ru</string>
         </property>
        </widget>
       </item>
@@ -107,7 +107,7 @@
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="text">
-         <string>test-db</string>
+         <string>netology_cpp</string>
         </property>
        </widget>
       </item>
@@ -117,7 +117,7 @@
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="text">
-         <string>postgres</string>
+         <string>netology_usr_cpp</string>
         </property>
        </widget>
       </item>
@@ -127,7 +127,7 @@
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
         <property name="text">
-         <string>Zerg0987</string>
+         <string>CppNeto3</string>
         </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>

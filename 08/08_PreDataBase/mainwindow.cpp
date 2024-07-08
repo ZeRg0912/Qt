@@ -31,7 +31,11 @@ MainWindow::MainWindow(QWidget *parent)
      * Устанавливаем данные для подключениея к БД.
      * Поскольку метод небольшой используем лямбда-функцию.
      */
-    connect(dataDb, &DbData::sig_sendData, this, &MainWindow::ConnectToDB);
+    connect(dataDb, &DbData::sig_sendData, this, [&](QVector<QString> receiveData){
+        dataForConnect = receiveData;
+        auto conn = [this]{dataBase->ConnectToDataBase(dataForConnect);};
+        QtConcurrent::run(conn);
+    });
 
     /*
      * Соединяем сигнал, который передает ответ от БД с методом, который отображает ответ в ПИ
@@ -47,23 +51,11 @@ MainWindow::MainWindow(QWidget *parent)
      *  Сигнал для реквеста от БД
      */
     connect(dataBase, &DataBase::sig_SendStatusRequest, this, &MainWindow::ReceiveStatusRequestToDB);
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::ConnectToDB(QVector<QString> receiveData)
-{
-    dataForConnect = receiveData;
-
-    ui->lb_statusConnect->setText("Подключение");
-    ui->lb_statusConnect->setStyleSheet("color : black");
-
-    auto conn = [&]{dataBase->ConnectToDataBase(dataForConnect);};
-    QtConcurrent::run(conn);
 }
 
 /*!
@@ -88,7 +80,6 @@ void MainWindow::on_act_addData_triggered()
  */
 void MainWindow::on_pb_request_clicked()
 {
-
     ///Тут должен быть код ДЗ
     requestType req = requestAllFilms;
     switch(ui->cb_category->currentIndex()){
@@ -104,9 +95,8 @@ void MainWindow::on_pb_request_clicked()
     default:
         break;
     }
-    ui->tb_result->setModel(nullptr);
-    dataBase->RequestToDB(req, ui->tb_result);
-
+    ui->tv_result->setModel(nullptr);
+    dataBase->RequestToDB(req, ui->tv_result);
 }
 
 
@@ -138,11 +128,15 @@ void MainWindow::ReceiveStatusConnectionToDB(bool status)
  */
 void MainWindow::ReceiveStatusRequestToDB(QSqlError err)
 {
-
     if(err.type() != QSqlError::NoError){
         msg->setText(err.text());
         msg->exec();
     }
+}
 
+
+void MainWindow::on_pb_clear_clicked()
+{
+    ui->tv_result->setModel(NULL);
 }
 
