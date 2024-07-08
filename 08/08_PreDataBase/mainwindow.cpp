@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
      * Устанавливаем данные для подключениея к БД.
      * Поскольку метод небольшой используем лямбда-функцию.
      */
-    connect(dataDb, &DbData::sig_sendData, this, ConnectToDB);
+    connect(dataDb, &DbData::sig_sendData, this, &MainWindow::ConnectToDB);
 
     /*
      * Соединяем сигнал, который передает ответ от БД с методом, который отображает ответ в ПИ
@@ -42,6 +42,10 @@ MainWindow::MainWindow(QWidget *parent)
      *  Сигнал для подключения к БД
      */
     connect(dataBase, &DataBase::sig_SendStatusConnection, this, &MainWindow::ReceiveStatusConnectionToDB);
+
+    /*
+     *  Сигнал для реквеста от БД
+     */
     connect(dataBase, &DataBase::sig_SendStatusRequest, this, &MainWindow::ReceiveStatusRequestToDB);
 
 }
@@ -53,15 +57,13 @@ MainWindow::~MainWindow()
 
 void MainWindow::ConnectToDB(QVector<QString> receiveData)
 {
-    if(ui->lb_statusConnect->text() == "Отключено"){
-        dataForConnect = receiveData;
+    dataForConnect = receiveData;
 
-        ui->lb_statusConnect->setText("Подключение");
-        ui->lb_statusConnect->setStyleSheet("color : black");
+    ui->lb_statusConnect->setText("Подключение");
+    ui->lb_statusConnect->setStyleSheet("color : black");
 
-        auto conn = [&]{dataBase->ConnectToDataBase(dataForConnect);};
-        QtConcurrent::run(conn);
-    }
+    auto conn = [&]{dataBase->ConnectToDataBase(dataForConnect);};
+    QtConcurrent::run(conn);
 }
 
 /*!
