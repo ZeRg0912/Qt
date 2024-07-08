@@ -19,8 +19,8 @@ set(PROJECT_SOURCES
         mainwindow.ui
         database.h
         database.cpp
-        dbdata.h
         dbdata.cpp
+        dbdata.h
         dbdata.ui
 )
 

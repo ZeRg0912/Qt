@@ -3,10 +3,12 @@
 
 #include <QTableWidget>
 #include <QObject>
-#include <QSqlDatabase>
 #include <QSqlError>
-#include <QSqlQuery>
-
+#include <QSqlDatabase>
+#include <QSqlTableModel>
+#include <QSqlQueryModel>
+#include <QtSql>
+#include <QDebug>
 
 
 #define POSTGRE_DRIVER "QPSQL"
@@ -45,23 +47,20 @@ public:
 
     void AddDataBase(QString driver, QString nameDB = "");
     void DisconnectFromDataBase(QString nameDb = "");
-    void RequestToDB(QString request);
+    void RequestToDB(const requestType& type, QTableView* tb_result);
     QSqlError GetLastError(void);
     void ConnectToDataBase(QVector<QString> dataForConnect);
 
-
 signals:
-
-   void sig_SendDataFromDB(const QTableWidget *tableWg, int typeR);
+   void sig_SendDataFromDB(const requestType& type, const QTableView* tb_result);
    void sig_SendStatusConnection(bool);
-
-
+   void sig_SendStatusRequest(QSqlError err);
 
 private:
-
     QSqlDatabase* dataBase;
-
-
+    QSqlTableModel* tableModel;
+    QSqlQueryModel* queryModel;
+    QSqlQuery* simpleQuery;
 };
 
 #endif // DATABASE_H

@@ -91,16 +91,6 @@
       </property>
      </spacer>
     </item>
-    <item row="1" column="0" rowspan="4">
-     <widget class="QTableWidget" name="tb_result">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-     </widget>
-    </item>
     <item row="3" column="1">
      <widget class="QPushButton" name="pb_clear">
       <property name="sizePolicy">
@@ -127,6 +117,16 @@
       </property>
      </widget>
     </item>
+    <item row="1" column="0" rowspan="4">
+     <widget class="QTableView" name="tb_result">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -135,7 +135,7 @@
      <x>0</x>
      <y>0</y>
      <width>483</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -144,7 +144,6 @@
     </property>
     <addaction name="act_addData"/>
     <addaction name="separator"/>
-    <addaction name="act_connect"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -161,22 +160,5 @@
   </action>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>pb_clear</sender>
-   <signal>clicked()</signal>
-   <receiver>tb_result</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>374</x>
-     <y>486</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>200</x>
-     <y>482</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

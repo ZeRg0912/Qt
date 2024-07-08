@@ -3,10 +3,8 @@
 DataBase::DataBase(QObject *parent)
     : QObject{parent}
 {
-
     dataBase = new QSqlDatabase();
-
-
+    simpleQuery = new QSqlQuery();
 }
 
 DataBase::~DataBase()
@@ -46,9 +44,14 @@ void DataBase::ConnectToDataBase(QVector<QString> data)
 
     bool status;
     status = dataBase->open( );
+    if (status) {
+        tableModel = new QSqlTableModel(this, *dataBase);
+        queryModel = new QSqlQueryModel(this);
+    }
     emit sig_SendStatusConnection(status);
 
 }
+
 /*!
  * \brief Метод производит отключение от БД
  * \param Имя БД
@@ -60,16 +63,63 @@ void DataBase::DisconnectFromDataBase(QString nameDb)
     dataBase->close();
 
 }
+
 /*!
  * \brief Метод формирует запрос к БД.
  * \param request - SQL запрос
- * \return
  */
-void DataBase::RequestToDB(QString request)
+void DataBase::RequestToDB(const requestType& type, QTableView* tb_result)
 {
+    QSqlError err;
+    *simpleQuery = QSqlQuery(*dataBase);
 
+    QString request = "SELECT title, description FROM film f "
+                      "JOIN film_category fc on f.film_id = fc.film_id "
+                      "JOIN category c on c.category_id = fc.category_id ";
     ///Тут должен быть код ДЗ
+    if (type == requestAllFilms) {
 
+        tableModel->setTable("film");
+        tableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        tableModel->setHeaderData(1, Qt::Horizontal, tr("Название"));
+        tableModel->setHeaderData(2, Qt::Horizontal, tr("Описание"));
+        tableModel->select();
+        tb_result->setModel(tableModel);
+
+        for (int column = 0; column < tableModel->columnCount(); column++) {
+            if (column != 1 && column != 2) {
+                tb_result->setColumnHidden(column, true);
+            }
+        }
+
+
+    } else {
+
+        if (type == requestComedy) {
+            request = request + " WHERE c.name = 'Comedy'";
+        } else if (type == requestHorrors) {
+            request = request + " WHERE c.name = 'Horror'";
+        }
+
+        queryModel->setQuery(request, *dataBase);
+
+        qDebug() << queryModel->lastError();
+        qDebug() << queryModel->query().lastQuery();
+
+        queryModel->setHeaderData(0, Qt::Horizontal, tr("Название"));
+        queryModel->setHeaderData(1, Qt::Horizontal, tr("Описание"));
+        tb_result->setModel(queryModel);
+        for (int col = 0; col < queryModel->columnCount(); ++col) {
+            if (col != 0 && col != 1) { // Скрыть все столбцы, кроме второго и третьего
+                tb_result->setColumnHidden(col, true);
+            }
+        }
+    }
+    if(simpleQuery->exec(request) == false){
+        err = simpleQuery->lastError();
+        emit sig_SendStatusRequest(err);
+    }
+    tb_result->resizeColumnsToContents();
 }
 
 /*!

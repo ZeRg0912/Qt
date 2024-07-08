@@ -3,9 +3,7 @@
 
 #include <QDialog>
 
-namespace Ui {
-class DbData;
-}
+namespace Ui { class DbData; }
 
 class DbData : public QDialog
 {
@@ -15,18 +13,14 @@ public:
     explicit DbData(QWidget *parent = nullptr);
     ~DbData();
 
-
- signals:
-    void sig_sendData(QVector<QString> dbData);
-
+signals:
+   void sig_sendData(QVector<QString> dbData);
 
 private slots:
-    void on_buttonBox_accepted();
+    void on_pb_Connect_clicked();
 
 private:
     Ui::DbData *ui;
     QVector<QString> data;
-
 };
-
 #endif // DBDATA_H
