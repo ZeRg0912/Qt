@@ -4,6 +4,7 @@
 #include <QUdpSocket>
 #include <QNetworkDatagram>
 #include <QDateTime>
+#include <QDebug>
 
 
 #define BIND_PORT 12345
@@ -14,8 +15,8 @@ class UDPworker : public QObject
 public:
     explicit UDPworker(QObject *parent = nullptr);
     void InitSocket( void );
-    void ReadDatagram( QNetworkDatagram datagram);
-    void SendDatagram(QByteArray data );
+    void ReadDatagram(QNetworkDatagram datagram);
+    void SendDatagram(QByteArray data, QString format);
 
 
 private slots:
@@ -26,6 +27,7 @@ private:
 
 signals:
     void sig_sendTimeToGUI(QDateTime data);
+    void sig_sendDataToGUI(QByteArray data);
 
 };
 

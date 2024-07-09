@@ -22,7 +22,13 @@ public:
 private slots:
     void on_pb_start_clicked();
     void DisplayTime(QDateTime data);
+    void DisplayData(QString data);
     void on_pb_stop_clicked();
+
+    void on_pb_sendData_clicked();
+
+signals:
+    void sig_sendData();
 
 private:
     Ui::MainWindow *ui;

@@ -30,25 +30,35 @@ void UDPworker::InitSocket()
  */
 void UDPworker::ReadDatagram(QNetworkDatagram datagram)
 {
-
     QByteArray data;
     data = datagram.data();
+    QString format;
 
+    for (size_t i = 0; i < 4; i++) {
+        format += data[i];
+    }
+
+    data.remove(0, 4);
 
     QDataStream inStr(&data, QIODevice::ReadOnly);
-    QDateTime dateTime;
-    inStr >> dateTime;
-
-    emit sig_sendTimeToGUI(dateTime);
+    if (format == "TIME") {
+        QDateTime dateTime;
+        inStr >> dateTime;
+        emit sig_sendTimeToGUI(dateTime);
+    }
+    if (format == "DATA") {
+        emit sig_sendDataToGUI(data);
+    }
 }
 /*!
  * @brief Метод осуществляет опередачу датаграммы
  */
-void UDPworker::SendDatagram(QByteArray data)
+void UDPworker::SendDatagram(QByteArray data, QString format)
 {
     /*
      *  Отправляем данные на localhost и задефайненный порт
      */
+    data.push_front(format.toStdString());
     serviceUdpSocket->writeDatagram(data, QHostAddress::LocalHost, BIND_PORT);
 }
 

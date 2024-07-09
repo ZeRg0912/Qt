@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-find_package(Qt6 COMPONENTS Widgets REQUIRED)
+find_package(Qt6 COMPONENTS REQUIRED Widgets Network)
 
 
 set(PROJECT_SOURCES
@@ -31,7 +31,8 @@ qt_add_executable(PreUDPsocket
 )
 
 
-target_link_libraries(PreUDPsocket PRIVATE Qt6::Widgets)
+target_link_libraries(PreUDPsocket PRIVATE Qt6::Widgets
+                                           Qt6::Network)
 
 
 
