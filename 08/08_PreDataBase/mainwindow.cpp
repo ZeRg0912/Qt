@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
      */
     connect(dataDb, &DbData::sig_sendData, this, [&](QVector<QString> receiveData){
         dataForConnect = receiveData;
+        ui->lb_statusConnect->setText("Подключение");
+        ui->lb_statusConnect->setStyleSheet("color:black");
         auto conn = [this]{dataBase->ConnectToDataBase(dataForConnect);};
         QtConcurrent::run(conn);
     });
