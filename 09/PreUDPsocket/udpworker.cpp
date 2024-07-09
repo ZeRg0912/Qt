@@ -32,12 +32,7 @@ void UDPworker::ReadDatagram(QNetworkDatagram datagram)
 {
     QByteArray data;
     data = datagram.data();
-    QString format;
-
-    for (size_t i = 0; i < 4; i++) {
-        format += data[i];
-    }
-
+    QString format = QString::fromUtf8(data.left(4));
     data.remove(0, 4);
 
     QDataStream inStr(&data, QIODevice::ReadOnly);
@@ -58,7 +53,7 @@ void UDPworker::SendDatagram(QByteArray data, QString format)
     /*
      *  Отправляем данные на localhost и задефайненный порт
      */
-    data.push_front(format.toStdString());
+    data.prepend(format.toUtf8());
     serviceUdpSocket->writeDatagram(data, QHostAddress::LocalHost, BIND_PORT);
 }
 

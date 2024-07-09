@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
         QDataStream outStr(&dataToSend, QIODevice::WriteOnly);
         QHostAddress ip = QHostAddress::LocalHost;
         QString inputText = ui->te_inputData->toPlainText();
-        outStr << ip.toString() << '\n' << QString::number(inputText.size());
+        outStr << ip.toString() << inputText;
 
         udpWorker->SendDatagram(dataToSend, "DATA");
 
@@ -67,14 +67,19 @@ void MainWindow::DisplayTime(QDateTime data)
 
 }
 
-void MainWindow::DisplayData(QString data)
+void MainWindow::DisplayData(QByteArray data)
 {
     counterPck++;
     if(counterPck % 20 == 0){
         ui->te_result->clear();
     }
-    ui->te_result->append("Принято сообщение от: " + data.section('\n', 0, 0));
-    ui->te_result->append("Размер сообщения(байт): " + data.section('\n', 1, 1));
+    QDataStream inStr(&data, QIODevice::ReadOnly);
+    QString ip;
+    QString inputText;
+    inStr >> ip >> inputText;
+    ui->te_result->append("Принято сообщение от: " + ip);
+    ui->te_result->append("Размер сообщения(байт): " + QString::number(inputText.toUtf8().size()));
+    ui->te_result->append("Принято пакетов " + QString::number(counterPck));
 
 
 }
