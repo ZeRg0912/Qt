@@ -19,15 +19,11 @@ public:
     void ConnectToHost(QHostAddress host, uint16_t port);
     void DisconnectFromHost(void);
 
-
-
 private slots:
-
-    void ReadyReed(void);
+    void ReadyRead(void);
     void ProcessingData(ServiceHeader header, QDataStream &stream);
 
 private:
-
 QTcpSocket* socket;
 ServiceHeader servHeader;
 

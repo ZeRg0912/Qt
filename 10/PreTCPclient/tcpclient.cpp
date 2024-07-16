@@ -1,79 +1,83 @@
 #include "tcpclient.h"
 
+TCPclient::TCPclient(QObject *parent) : QObject(parent) {
+    socket = new QTcpSocket(this);
 
+    connect(socket, &QTcpSocket::connected, this, [&](){
+        emit sig_connectStatus(STATUS_SUCCESS);
+    });
 
+    connect(socket, &QTcpSocket::errorOccurred, this, [&](){
+        emit sig_connectStatus(ERR_CONNECT_TO_HOST);});
 
-/* ServiceHeader
- * Для работы с потоками наши данные необходимо сериализовать.
- * Поскольку типы данных не стандартные перегрузим оператор << Для работы с ServiceHeader
-*/
-QDataStream &operator >>(QDataStream &out, ServiceHeader &data){
+    connect(socket, &QTcpSocket::readyRead, this, &TCPclient::ReadyRead);
+    connect(socket, &QTcpSocket::disconnected, this, &TCPclient::sig_Disconnected);
+}
 
-    out >> data.id;
-    out >> data.idData;
-    out >> data.status;
-    out >> data.len;
+/* Операторы << и >> для сериализации ServiceHeader */
+QDataStream &operator <<(QDataStream &out, const ServiceHeader &header){
+    out << header.id
+        << header.idData
+        << header.status
+        << header.len;
+    return out;
+}
+
+QDataStream &operator >>(QDataStream &in, ServiceHeader &header){
+    in >> header.id
+       >> header.idData
+       >> header.status
+       >> header.len;
+    return in;
+}
+
+/* Операторы << и >> для сериализации StatServer */
+QDataStream &operator >>(QDataStream &out, StatServer &stat){
+
+    out >> stat.incBytes
+        >> stat.sendBytes
+        >> stat.revPck
+        >> stat.sendPck
+        >> stat.workTime
+        >> stat.clients;
     return out;
 };
-QDataStream &operator <<(QDataStream &in, ServiceHeader &data){
 
-    in << data.id;
-    in << data.idData;
-    in << data.status;
-    in << data.len;
+QDataStream &operator <<(QDataStream &in, StatServer &stat){
 
+    in << stat.incBytes
+       << stat.sendBytes
+       << stat.revPck
+       << stat.sendPck
+       << stat.workTime
+       << stat.clients;
     return in;
 };
 
-
-
-/*
- * Поскольку мы являемся клиентом, инициализацию сокета
- * проведем в конструкторе. Также необходимо соединить
- * сокет со всеми необходимыми нам сигналами.
-*/
-TCPclient::TCPclient(QObject *parent) : QObject(parent)
-{
-
+void TCPclient::SendRequest(ServiceHeader head) {
+    QByteArray send;
+    QDataStream out(&send, QIODevice::WriteOnly);
+    out << head;
+    socket->write(send);
 }
 
-/* write
- * Метод отправляет запрос на сервер. Сериализировать будем
- * при помощи QDataStream
-*/
-void TCPclient::SendRequest(ServiceHeader head)
-{
-
-
+void TCPclient::SendData(ServiceHeader head, QString data) {
+    QByteArray send;
+    QDataStream out(&send, QIODevice::WriteOnly);
+    out << head;
+    out << data;
+    socket->write(send);
 }
 
-/* write
- * Такой же метод только передаем еще данные.
-*/
-void TCPclient::SendData(ServiceHeader head, QString str)
-{
-
-
+void TCPclient::ConnectToHost(QHostAddress host, uint16_t port) {
+    socket->connectToHost(host, port);
 }
 
-/*
- * \brief Метод подключения к серверу
- */
-void TCPclient::ConnectToHost(QHostAddress host, uint16_t port)
-{
-
-}
-/*
- * \brief Метод отключения от сервера
- */
-void TCPclient::DisconnectFromHost()
-{
-
+void TCPclient::DisconnectFromHost() {
+    socket->disconnectFromHost();
 }
 
-
-void TCPclient::ReadyReed()
-{
+void TCPclient::ReadyRead() {
 
     QDataStream incStream(socket);
 
@@ -129,7 +133,6 @@ void TCPclient::ReadyReed()
     }
 }
 
-
 /*
  * Остался метод обработки полученных данных. Согласно протоколу
  * мы должны прочитать данные из сообщения и вывести их в ПИ.
@@ -137,19 +140,48 @@ void TCPclient::ReadyReed()
  * switch. Реализуем получение времени.
 */
 
-void TCPclient::ProcessingData(ServiceHeader header, QDataStream &stream)
-{
+void TCPclient::ProcessingData(ServiceHeader header, QDataStream &stream) {
 
     switch (header.idData){
 
-        case GET_TIME:
-        case GET_SIZE:
-        case GET_STAT:
-        case SET_DATA:
-        case CLEAR_DATA:
-        default:
-            return;
+    case GET_TIME: {
+        QDateTime time;
+        stream >> time;
+        emit sig_sendTime(time);
+        break;
+    }
 
+    case GET_SIZE: {
+        uint32_t len;
+        stream >> len;
+        emit sig_sendFreeSize(len);
+        break;
+    }
+    case GET_STAT: {
+        StatServer status;
+        stream >> status;
+        emit sig_sendStat(status);
+        break;
+    }
+
+    case SET_DATA: {
+        QString message;
+        stream >> message;
+        if (header.status == ERR_NO_FREE_SPACE)
+        {
+            message = "ERR_NO_FREE_SPACE";
         }
+        emit sig_SendReplyForSetData(message);
+        break;
+    }
+    case CLEAR_DATA: {
+        QString message = "данные на сервере очищены";
+        emit sig_SendReplyForSetData(message);
+        break;
+    }
+    default:
+        return;
+
+    }
 
 }
