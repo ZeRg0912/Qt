@@ -143,7 +143,7 @@ void MainWindow::on_pb_request_clicked() {
 
     switch (ui->cb_request->currentIndex()){
 
-    //Получить время
+        //Получить время
     case 0:
         header.idData = GET_TIME;
         break;
